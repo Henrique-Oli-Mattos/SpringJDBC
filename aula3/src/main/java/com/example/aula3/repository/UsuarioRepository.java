@@ -9,6 +9,8 @@ import com.example.aula3.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,7 +19,7 @@ public class UsuarioRepository {
     private static String SELECT_ALL = "select * from usuario";
     private static String DELETE_ID = "delete from usuario where id = (?)";
     private static String EDIT = "UPDATE usuario SET nome = ?, email = ?, senha = ? where id = ?";
-    private static String SELECT_EMAIL = "Select email from usuario where email = ?";
+    private static String SELECT_EMAIL = "Select * from usuario where email = ? and senha = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -61,8 +63,20 @@ public class UsuarioRepository {
     
 
     public boolean autenticar(String email, String senha){
+        List<Usuario> lista = jdbcTemplate.query(SELECT_EMAIL,new Object[] {email, senha}, new RowMapper<Usuario>(){
+            @Override
+            public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // TODO Auto-generated method stub
+                return new Usuario(
+                rs.getInt("id"),
+                rs.getString("nome"),
+                rs.getString("email"),
+                rs.getString("senha")
+                );
+            }
+        });
 
-        return true;
+        //if Ternário
+        return lista.size() > 0 ? true : false;
     }
-
 }

@@ -90,11 +90,7 @@ public class Aula3Application {
 			Usuario usuario = new Usuario(2, "teste3", "teste@teste", "123");
 			usuarioRepository.inserir(usuario);
 
-			usuarioRepository.autenticar("teste@teste", "123");
-
-			List<Usuario> listaUsuarios = usuarioRepository.obterTodos();
-			listaUsuarios.forEach(System.out::println);
-
+		System.out.println(usuarioRepository.autenticar("teste@teste", "123"));
 
 		};
 	}
